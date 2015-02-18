@@ -1,0 +1,140 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+            [data-hidden="hidden"] {
+                display: none; /* OR */
+                visibility: hidden; /* If you want to reserve space */
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <!-- JQuery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <!-- AngularJS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
+        <!-- effects -->
+        <script src="js/effects.js"></script>
+        <!--[if lt IE 9]>
+            <script src="js/vendor/html5-3.6-respond-1.4.2.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-header">
+                        <h1>Must Do Before Die List</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="btn-group-vertical" data-toggle="buttons" role="group" aria-label="List">
+
+                        <div ng-app="list.js" ng-controller="loadCategories"> 
+                            <div ng-repeat="x in names">
+                                <button type="button" class="btn btn-default btn-primary list">
+                                    {{x.name}}
+                                </button>
+                                <button type="button" name="editList" class="btn btn-default btn-primary list">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"  ></span>  
+                                </button> 
+                                <button type="button" name="deleteList" class="btn btn-default btn-primary  list">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"  ></span>  
+                                </button>
+                                <br />
+                            </div> 
+                        </div>
+
+                        <div ng-app="list.js" ng-controller="addList">
+                            <form  name="listForm"  id="listForm" ng-submit="addList()">
+                                <input type="text" id="name" name="name" ng-model="list.name" placeholder="List Name" />
+                                <button type="submit" name="listForm" class="btn btn-default" aria-label="Left Align">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div> 
+                <div class="col-md-8">
+                    <div ng-app="item.js" ng-controller="addItem">
+                        <form name="itemForm" ng-submit="addItem()">
+                            <input type="text" name="newItem" ng-model="item.text" />
+                            <input type="submit" value="Add">
+                        </form>
+                    </div>
+                    <div ng-app="list.js" ng-controller="loadList"> 
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <td> <input type="checkbox" value=""></td>
+                                    <td>Task</td> 
+                                    <td>Date</td>
+                                    <td></td> 
+                                    <td></td>
+                                </tr> 
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in list">
+                                    <td> <input type="checkbox" value="{{item.active}}"> </td>
+                                    <td>{{ item.text}}</td> 
+                                    <td>{{ item.date}}</td>
+                                    <td>
+                                        <button type="button"  class="btn btn-default" aria-label="Left Align">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                        </button>
+                                    </td> 
+                                    <td>
+                                        <button type="button"  class="btn btn-default" aria-label="Left Align">
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>  
+                        </table>
+                    </div>
+                </div>
+            </div> 
+        </div> <!-- /container --> 
+        <div class="container">
+            <div class="row">
+                <hr>
+
+
+                <footer>
+                    <a href="http://www.wtfpl.net/"><img src=" http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-4.png"
+                                                         width="80" height="15" alt="WTFPL" /></a><span>  Jonas Mayer</span>
+                </footer>
+            </div>  
+        </div> <!-- /container -->        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. goes here --> 
+    </body>
+</html>

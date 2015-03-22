@@ -1,15 +1,8 @@
-/*- 
- * Classname:             EditActiveItemServlet.java 
- * 
- * Version information:   (versão) 
- * 
- * Date:                  12/02/2015 - 15:47:54 
- * 
- * author:                Jonas Mayer (jonas.mayer.developer@gmail.com) 
- * Copyright notice:      (informações do método, pra que serve, idéia principal) 
- */
 package controller;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,14 +21,31 @@ public class EditActiveItemServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse response) throws IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json; charset=UTF-8");
+        try {
+            StringBuffer sb = new StringBuffer();
 
-        ToDoListPersistence listPersistence = new ToDoListPersistence();
-        String listName = req.getParameter("name");
-        String task = req.getParameter("item.text");
+            BufferedReader reader = req.getReader();
+            String line = null;
 
-        listPersistence.inverseItem(listName, task);
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                System.err.println(line);
+            }
+
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = null;
+            jsonObject = (JsonObject) parser.parse(sb.toString());
+            JsonObject oldList = (JsonObject) jsonObject.get("oldList");
+            JsonObject newList = (JsonObject) jsonObject.get("newList");
+            String listName = oldList.get("name").getAsString();
+            String task = newList.get("name").getAsString();
+            ToDoListPersistence listPersistence = new ToDoListPersistence();
+
+            listPersistence.inverseItem(listName, task);
+        } catch (Exception ex) {
+            System.err.println("ERROR in EditActiveItemServlet:" + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
 }//fim da classe EditActiveItemServlet 

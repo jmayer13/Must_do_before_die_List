@@ -1,15 +1,8 @@
-/*- 
- * Classname:             AddListServlet.java 
- * 
- * Version information:   (versão) 
- * 
- * Date:                  12/02/2015 - 15:11:53 
- * 
- * author:                Jonas Mayer (jonas.mayer.developer@gmail.com) 
- * Copyright notice:      (informações do método, pra que serve, idéia principal) 
- */
 package controller;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,23 +10,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import json.ToDoListPersistence;
 
-/**
- * Descrição
- *
- * @see
- * @author Jonas Mayer (jonas.mayer.developer@gmail.com)
- */
 @WebServlet("/addList")
 public class AddListServlet extends HttpServlet {
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse response) throws IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json; charset=UTF-8");
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            StringBuffer sb = new StringBuffer();
 
-        ToDoListPersistence listPersistence = new ToDoListPersistence();
-        String listName = req.getParameter("name");
-        listPersistence.createList(listName);
+            BufferedReader reader = request.getReader();
+            String line = null;
 
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = null;
+            jsonObject = (JsonObject) parser.parse(sb.toString());
+            String listName = jsonObject.get("name").getAsString();
+
+            ToDoListPersistence listPersistence = new ToDoListPersistence();
+            listPersistence.createList(listName);
+        } catch (Exception ex) {
+            System.err.println("ERROR in AddListServlet:" + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
-}//fim da classe AddListServlet 
+}

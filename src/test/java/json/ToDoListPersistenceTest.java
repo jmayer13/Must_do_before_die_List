@@ -1,17 +1,9 @@
-/*- 
- * Classname:             ToDoListPersistenceTest.java 
- * 
- * Version information:   (versão) 
- * 
- * Date:                  18/02/2015 - 14:56:31 
- * 
- * author:                Jonas Mayer (jonas.mayer.developer@gmail.com) 
- * Copyright notice:      (informações do método, pra que serve, idéia principal) 
- */
 package json;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.io.File;
+import java.io.IOException;
 import static junit.framework.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,10 +17,12 @@ import org.junit.Test;
 public class ToDoListPersistenceTest {
 
     protected ToDoListPersistence toDoListPersistence;
+    JsonObject _element;
 
     @Before
     public void initialize() {
         toDoListPersistence = new ToDoListPersistence() {
+
             protected void createDir() {
             }
 
@@ -40,6 +34,16 @@ public class ToDoListPersistenceTest {
                 files[1] = new File("works");
                 return files;
             }
+
+            protected void writeJson(String listName, JsonArray element) {
+                _element = element.get(0).getAsJsonObject();
+            }
+
+            protected JsonArray cutListItems(String listName) {
+                JsonArray jsonArray = new JsonArray();
+                return jsonArray;
+
+            }
         };
     }
 
@@ -47,6 +51,20 @@ public class ToDoListPersistenceTest {
     public void testGetCategories() {
         JsonArray ja = toDoListPersistence.getCategories();
         assertTrue(ja.toString(), ja.toString().equals("[{\"name\":\"test\"},{\"name\":\"works\"}]"));
+    }
+
+    @Test
+    public void testAddItemList() throws IOException {
+        toDoListPersistence.addItemList("list", "item");
+        assertTrue(_element.toString(), _element.get("text").getAsString().equals("item"));
+        _element = null;
+    }
+
+    @Test
+    public void testInverseItemJObject() throws IOException {
+        toDoListPersistence.addItemList("list", "item");
+        toDoListPersistence.inverseItemJObject(_element, "item");
+        assertTrue(_element.get("active").getAsBoolean());
     }
 
 }//fim da classe ToDoListPersistenceTest 

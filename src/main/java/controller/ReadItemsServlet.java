@@ -1,16 +1,9 @@
-/*- 
- * Classname:             ReadItemsServlet.java 
- * 
- * Version information:   (versão) 
- * 
- * Date:                  13/02/2015 - 21:46:37 
- * 
- * author:                Jonas Mayer (jonas.mayer.developer@gmail.com) 
- * Copyright notice:      (informações do método, pra que serve, idéia principal) 
- */
 package controller;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
@@ -19,30 +12,41 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import json.ToDoListPersistence;
 
-/**
- * Descrição
- *
- * @see
- * @author Jonas Mayer (jonas.mayer.developer@gmail.com)
- */
 @WebServlet("/getItems")
 public class ReadItemsServlet extends HttpServlet {
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
-        String listName = req.getParameter("name");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json; charset=UTF-8");
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            StringBuffer sb = new StringBuffer();
+            BufferedReader reader = request.getReader();
+            String line = null;
 
-        ToDoListPersistence listPersistence = new ToDoListPersistence();
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            JsonParser parser = new JsonParser();
+            JsonArray jo = null;
 
-        JsonObject jo = listPersistence.getList(listName);
+            JsonObject jsonObject = null;
+            String listName = null;
+            try {
+                jsonObject = (JsonObject) parser.parse(sb.toString());
+                listName = jsonObject.get("name").getAsString();
+                ToDoListPersistence listPersistence = new ToDoListPersistence();
+                jo = listPersistence.getList(listName);
 
-        PrintWriter out
-                = response.getWriter();
-        out.print(jo);
-        out.flush();
-
+            } catch (Exception ex) {
+                jo = new JsonArray();
+                System.err.println("ERROR in ReadItemsServlet:" + ex.getMessage());
+                ex.printStackTrace();
+            }
+            PrintWriter out = response.getWriter();
+            out.print(jo);
+            out.flush();
+        } catch (Exception ex) {
+            System.err.println("ERROR in ReadItemsServlet:" + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
-
 }//fim da classe ReadItemsServlet 

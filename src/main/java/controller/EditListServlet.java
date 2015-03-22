@@ -1,15 +1,8 @@
-/*- 
- * Classname:             EditListServlet.java 
- * 
- * Version information:   (versão) 
- * 
- * Date:                  13/02/2015 - 21:40:13 
- * 
- * author:                Jonas Mayer (jonas.mayer.developer@gmail.com) 
- * Copyright notice:      (informações do método, pra que serve, idéia principal) 
- */
 package controller;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,24 +10,37 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import json.ToDoListPersistence;
 
-/**
- * Descrição
- *
- * @see
- * @author Jonas Mayer (jonas.mayer.developer@gmail.com)
- */
 @WebServlet("/editList")
 public class EditListServlet extends HttpServlet {
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse response) throws IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json; charset=UTF-8");
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            StringBuffer sb = new StringBuffer();
 
-        ToDoListPersistence listPersistence = new ToDoListPersistence();
-        String listName = req.getParameter("name");
-        String oldName = req.getParameter("oldName");
+            BufferedReader reader = request.getReader();
+            String line = null;
 
-        listPersistence.editList(oldName, listName);
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                System.err.println(line);
+            }
+
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = null;
+            jsonObject = (JsonObject) parser.parse(sb.toString());
+            JsonObject oldList = (JsonObject) jsonObject.get("oldList");
+            JsonObject newList = (JsonObject) jsonObject.get("newList");
+            String oldNameString = oldList.get("name").getAsString();
+
+            String newListString = newList.get("name").getAsString();
+
+            ToDoListPersistence listPersistence = new ToDoListPersistence();
+
+            listPersistence.editList(oldNameString, newListString);
+        } catch (Exception ex) {
+            System.err.println("ERROR in EditListServlet:" + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 }//fim da classe EditListServlet 

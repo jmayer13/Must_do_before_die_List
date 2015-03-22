@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="json.ToDoListPersistenceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2015-02-18T18:20:32" hostname="Aspire" time="0.045">
+<testsuite name="json.ToDoListPersistenceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2015-03-22T19:44:24" hostname="Aspire" time="0.001">
   <properties/>
-  <testcase name="testGetCategories" classname="json.ToDoListPersistenceTest" time="0.045"/>
+  <testcase name="testAddItemList" classname="json.ToDoListPersistenceTest" time="0.0"/>
+  <testcase name="testGetCategories" classname="json.ToDoListPersistenceTest" time="0.0"/>
+  <testcase name="testInverseItemJObject" classname="json.ToDoListPersistenceTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
